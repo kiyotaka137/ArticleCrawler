@@ -1,0 +1,57 @@
+syntax="proto3";
+
+package articlecrawler;
+option go_package = "github.com/kiyotaka137/ArticleCrawler/proto";
+
+service ArticleCrawler {
+    //принимает список URL возвращает список принятых не успешно
+    rpc SubmitURLs(SubmitURLsRequest) returns (SubmitURLsResponse){};
+    //получить статью по ID
+    rpc GetArticle(GetArticleRequest) returns (GetArticleResponse){};
+    //получить список всех статей или последних N
+    rpc ListArticles(ListArticlesRequest) returns (ListArticlesResponse){};
+    //удалить статью по ID
+    rpc DeleteArticle(DeleteArticleRequest) returns (DeleteArticleResponse){};
+}
+
+message SubmitURLsRequest {
+    repeated string urls = 1;  
+}
+
+message SubmitURLsResponse {
+    repeated string failed_urls = 1; 
+}
+
+message GetArticleRequest {
+    string url=1;
+}
+
+message GetArticleResponse {
+    Article article = 1;  
+}
+
+message ListArticlesRequest {
+    bool all=1;
+    int32 limit=2;
+}
+
+message ListArticlesResponse {
+    repeated Article articles = 1;
+}
+
+message DeleteArticleRequest {
+    string id = 1; 
+}
+
+message DeleteArticleResponse {
+    bool success = 1;  
+}
+
+message Article {
+    string id = 1;         
+    string url = 2;         
+    string title = 3;       
+    string content = 4;   
+    string html = 5;      
+    int64 created_at = 6;   
+}

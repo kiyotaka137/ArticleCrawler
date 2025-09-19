@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package proto;
+option go_package = "github.com/kiyotaka137/articlecrawler/pkg/proto;proto";
+
+message SubmitUrlRequest {
+  string url = 1;
+}
+
+message SubmitUrlResponse {
+  string id = 1;
+  string message = 2;
+}
+
+message GetArticleRequest {
+  string id = 1;
+}
+
+message ListArticlesRequest {
+  int32 limit = 1;
+  int32 offset = 2;
+}
+
+message Article {
+  string id = 1;
+  string url = 2;
+  string title = 3;
+  string body = 4;
+  string summary = 5;
+  string content_hash = 6;
+  string language = 7;
+  int32 read_time_minutes = 8;
+  string created_at = 9;
+}
+
+message ListArticlesResponse {
+  repeated Article articles = 1;
+}
+
+message StreamNewArticlesRequest {
+}
+
+service Crawler {
+  rpc SubmitUrl(SubmitUrlRequest) returns (SubmitUrlResponse);
+  rpc GetArticle(GetArticleRequest) returns (Article);
+  rpc ListArticles(ListArticlesRequest) returns (ListArticlesResponse);
+  rpc StreamNewArticles(StreamNewArticlesRequest) returns (stream Article);
+}

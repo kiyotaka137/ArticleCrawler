@@ -1,0 +1,16 @@
+server:
+  grpc_addr: ":50051"
+  http_addr: ":8080"
+pipeline:
+  fetch_workers: 4
+  parse_workers: 4
+  enrich_workers: 2
+  store_workers: 2
+rate_limit:
+  default_rps: 2
+  burst: 5
+database:
+  url: "postgres://crawler:crawlerpass@db:5432/articlecrawler?sslmode=disable"
+backoff:
+  base_seconds: 1
+  max_retries: 3

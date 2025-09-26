@@ -34,6 +34,6 @@ func RunMigrations(dbURL, migrationsPath string) error {
 		return fmt.Errorf("failed to apply migrations: %w", err)
 	}
 
-	log.Println("✅ Database migrations applied successfully")
+	log.Println("Database migrations applied successfully")
 	return nil
 }

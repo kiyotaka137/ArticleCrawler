@@ -1,15 +1,16 @@
-version: "3.8"
 services:
   db:
     image: postgres:15
+    container_name: articlecrawler-db-1
     environment:
       POSTGRES_USER: crawler
       POSTGRES_PASSWORD: crawlerpass
-      POSTGRES_DB: articlecrawler
+      POSTGRES_DB: crawler
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./internal/db/migrations/001_create_tables.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U crawler"]
       interval: 5s
@@ -17,14 +18,15 @@ services:
 
   app:
     build: .
+    container_name: articlecrawler-app-1
     depends_on:
       db:
         condition: service_healthy
     environment:
-      - DATABASE_URL=postgres://crawler:crawlerpass@db:5432/articlecrawler?sslmode=disable
+      - DATABASE_URL=postgres://crawler:crawlerpass@db:5432/crawler?sslmode=disable
     ports:
-      - "50051:50051" 
-      - "8080:8080"  
+      - "50051:50051"
+      - "8080:8080"
     volumes:
       - ./:/app
 

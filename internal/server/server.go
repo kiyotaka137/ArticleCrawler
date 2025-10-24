@@ -1,6 +1,9 @@
 package grpcserver
 
 import (
+	"ArticleCrawler/internal/db"
+	"ArticleCrawler/internal/pipeline"
+	"ArticleCrawler/pkg/proto"
 	"context"
 	"fmt"
 	"log"
@@ -8,14 +11,13 @@ import (
 	"strconv"
 	"time"
 
-	"ArticleCrawler/internal/db"
-	"ArticleCrawler/internal/pipeline"
-	"ArticleCrawler/pkg/proto"
+	"google.golang.org/grpc/reflection"
 
 	"google.golang.org/grpc"
 )
 
 type Server struct {
+	proto.UnimplementedCrawlerServer
 	repo     *db.Repository
 	hub      *pipeline.Hub
 	submitCh chan pipeline.FetchJob
@@ -36,6 +38,7 @@ func (s *Server) Start(ctx context.Context, addr string) error {
 		return err
 	}
 	s.grpcSrv = grpc.NewServer()
+	reflection.Register(s.grpcSrv)
 	proto.RegisterCrawlerServer(s.grpcSrv, s)
 	go func() {
 		log.Printf("[grpc] listening %s", addr)
@@ -45,7 +48,7 @@ func (s *Server) Start(ctx context.Context, addr string) error {
 	}()
 	go func() {
 		<-ctx.Done()
-		log.Println("[grpc] stopping server")+
+		log.Println("[grpc] stopping server")
 		s.grpcSrv.GracefulStop()
 	}()
 	return nil

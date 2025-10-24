@@ -10,7 +10,7 @@ rate_limit:
   default_rps: 2
   burst: 5
 database:
-  url: "postgres://crawler:crawlerpass@db:5432/articlecrawler?sslmode=disable"
+  url: "postgres://crawler:crawlerpass@db:5432/crawler?sslmode=disable"
 backoff:
   base_seconds: 1
   max_retries: 3
